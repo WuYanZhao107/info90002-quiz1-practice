@@ -12,6 +12,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { choiceQuestions, coverageAudit, LETTERS, shortQuestions, weekMeta, weeks } from '@/lib/questions';
+import { choiceAnalysis, getTopicGuidance, shortAnalysis } from '@/lib/question-guidance';
 import { answeredChoice, answeredShort, sameAnswerSet } from '@/lib/quiz-utils';
 import type { ChoiceQuestion, ShortQuestion, WeekNumber } from '@/lib/quiz-types';
 
@@ -28,6 +29,7 @@ const getShortForWeek = (week: WeekNumber) => shortQuestions.filter((q) => q.wee
 function ChoiceCard({ question, index, total, answer, submitted, onChange }: { question: ChoiceQuestion; index: number; total: number; answer: number[]; submitted: boolean; onChange: (answer: number[]) => void }) {
   const correct = sameAnswerSet(answer, question.correct);
   const unanswered = !answer.length;
+  const guidance = getTopicGuidance(question.topic);
   const optionClass = (optionIndex: number) => {
     const selected = answer.includes(optionIndex);
     const isCorrect = question.correct.includes(optionIndex);
@@ -61,9 +63,23 @@ function ChoiceCard({ question, index, total, answer, submitted, onChange }: { q
       </CardHeader>
       <CardContent className="pt-5">
         {question.kind === 'single' ? <RadioGroup value={answer.length ? String(answer[0]) : ''} onValueChange={(value) => onChange([Number(value)])} className="gap-3">{options}</RadioGroup> : <fieldset className="grid gap-3" aria-label={`${question.id} options`}>{options}</fieldset>}
-        {submitted && <div className={`mt-5 rounded-xl border px-4 py-3 text-sm leading-6 ${unanswered ? 'border-amber-200 bg-amber-50 text-amber-900' : correct ? 'border-emerald-200 bg-emerald-50 text-emerald-900' : 'border-rose-200 bg-rose-50 text-rose-900'}`}>
-          <p className="font-semibold">{unanswered ? '未作答' : correct ? '回答正确' : '回答错误'}</p>
-          <p>Correct answer: {question.correct.map((value) => `${LETTERS[value]}. ${question.options[value]}`).join(' · ')}</p>
+        {submitted && <div className="mt-5 space-y-3">
+          <div className={`rounded-xl border px-4 py-3 text-sm leading-6 ${unanswered ? 'border-amber-200 bg-amber-50 text-amber-900' : correct ? 'border-emerald-200 bg-emerald-50 text-emerald-900' : 'border-rose-200 bg-rose-50 text-rose-900'}`}>
+            <p className="font-semibold">{unanswered ? '未作答' : correct ? '回答正确' : '回答错误'}</p>
+            <p>Correct answer: {question.correct.map((value) => `${LETTERS[value]}. ${question.options[value]}`).join(' · ')}</p>
+          </div>
+          <div className="rounded-xl border border-sky-200 bg-sky-50/70 px-4 py-4 text-sm leading-7 text-slate-700">
+            <p className="font-semibold text-sky-950">考察知识点</p>
+            <p>{question.topic}：{guidance.knowledge}</p>
+          </div>
+          <div className="rounded-xl border border-slate-200 bg-white px-4 py-4 text-sm leading-7 text-slate-700">
+            <p className="font-semibold text-slate-950">解析</p>
+            <p>{choiceAnalysis(question)}</p>
+          </div>
+          <div className="rounded-xl border border-indigo-200 bg-indigo-50/70 px-4 py-4 text-sm leading-7 text-slate-700">
+            <p className="font-semibold text-indigo-950">拓展与易错提醒</p>
+            <p>{guidance.extension}</p>
+          </div>
         </div>}
       </CardContent>
     </Card>
@@ -71,6 +87,7 @@ function ChoiceCard({ question, index, total, answer, submitted, onChange }: { q
 }
 
 function ShortCard({ question, index, total, answer, submitted, onChange }: { question: ShortQuestion; index: number; total: number; answer: string; submitted: boolean; onChange: (answer: string) => void }) {
+  const guidance = getTopicGuidance(question.topic);
   return (
     <Card className="border-0 shadow-[0_10px_30px_rgb(15_23_42/0.06)] ring-1 ring-slate-200">
       <CardHeader className="border-b border-slate-100 pb-5">
@@ -79,8 +96,13 @@ function ShortCard({ question, index, total, answer, submitted, onChange }: { qu
       </CardHeader>
       <CardContent className="pt-5">
         <Textarea aria-label={`Answer for ${question.id}`} className="min-h-32 resize-y bg-white text-base leading-7" disabled={submitted} placeholder="Write your answer in English…" value={answer} onChange={(event) => onChange(event.target.value)} />
-        {submitted && <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm leading-6 text-emerald-950">
-          {!answer.trim() && <p className="mb-1 font-semibold text-amber-800">未作答</p>}<p className="font-semibold">Reference answer</p><p>{question.answer}</p>
+        {submitted && <div className="mt-5 space-y-3 text-sm leading-7">
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-950">
+            {!answer.trim() && <p className="mb-1 font-semibold text-amber-800">未作答</p>}<p className="font-semibold">Reference answer</p><p>{question.answer}</p>
+          </div>
+          <div className="rounded-xl border border-sky-200 bg-sky-50/70 px-4 py-4 text-slate-700"><p className="font-semibold text-sky-950">考察知识点</p><p>{question.topic}：{guidance.knowledge}</p></div>
+          <div className="rounded-xl border border-slate-200 bg-white px-4 py-4 text-slate-700"><p className="font-semibold text-slate-950">解析与得分点</p><p>{shortAnalysis(question)}</p></div>
+          <div className="rounded-xl border border-indigo-200 bg-indigo-50/70 px-4 py-4 text-slate-700"><p className="font-semibold text-indigo-950">拓展与易错提醒</p><p>{guidance.extension}</p></div>
         </div>}
       </CardContent>
     </Card>
@@ -202,18 +224,18 @@ export default function Home() {
           <Card className="hidden border-0 bg-slate-900 text-slate-100 shadow-sm lg:block"><CardContent className="p-4 text-sm leading-6"><p className="font-semibold">Quiz information</p><p className="mt-2 text-slate-300">Week 1–4 · 11 questions · 70 minutes · MCQ + short answer</p><p className="mt-3 border-t border-slate-700 pt-3 text-xs text-slate-400">题库覆盖 {coverageAudit.length} 个课件考点组</p></CardContent></Card>
         </aside>
         <section className="min-w-0">
-          <div className="mb-6 flex flex-wrap items-start justify-between gap-4"><div><div className="mb-2 flex items-center gap-2 text-sm font-medium text-sky-800"><BookOpenCheck aria-hidden="true" className="size-4" />Week {activeWeek} · {weekMeta[activeWeek].title}</div><h2 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">{weekMeta[activeWeek].topics}</h2><p className="mt-2 max-w-3xl text-base leading-7 text-slate-600">答案在提交对应部分后显示。Multiple choice 必须选中完整正确集合才得分，不设部分分。</p></div>
+          <div className="mb-6 flex flex-wrap items-start justify-between gap-4"><div><div className="mb-2 flex items-center gap-2 text-sm font-medium text-sky-800"><BookOpenCheck aria-hidden="true" className="size-4" />Week {activeWeek} · {weekMeta[activeWeek].title}</div><h2 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">{weekMeta[activeWeek].topics}</h2><p className="mt-2 max-w-3xl text-base leading-7 text-slate-600">提交后显示正确答案、考察知识点、解析和拓展。Multiple choice 必须选中完整正确集合才得分，不设部分分。</p></div>
             <AlertDialog><AlertDialogTrigger render={<Button variant="outline" />}><RotateCcw aria-hidden="true" />重做本周</AlertDialogTrigger><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>清除 Week {activeWeek} 的全部记录？</AlertDialogTitle><AlertDialogDescription>选择题、简答题、得分和交卷状态都会从当前设备清除。</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>取消</AlertDialogCancel><AlertDialogAction variant="destructive" onClick={resetWeek}>确认重做</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
           </div>
           <Tabs value={activeSection} onValueChange={(value) => setActiveSection(value as Section)}>
             <TabsList className="mb-5 h-11 bg-slate-100 p-1"><TabsTrigger className="px-4" value="choice">选择题 <span className="text-xs text-slate-400">{weekChoiceAnswered}/{weekChoice.length}</span></TabsTrigger><TabsTrigger className="px-4" value="short">简答题 <span className="text-xs text-slate-400">{weekShortAnswered}/{weekShort.length}</span></TabsTrigger></TabsList>
             <TabsContent value="choice">
-              {choiceSubmitted && <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-950"><div><p className="font-semibold">Week {activeWeek} 选择题已提交</p><p className="text-sm">得分 {choiceScore} / {weekChoice.length}；每题下方已显示正确答案。</p></div><Badge className="bg-emerald-700 text-white">{Math.round((choiceScore / weekChoice.length) * 100)}%</Badge></div>}
+              {choiceSubmitted && <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-950"><div><p className="font-semibold">Week {activeWeek} 选择题已提交</p><p className="text-sm">得分 {choiceScore} / {weekChoice.length}；每题下方已显示答案、知识点、解析与拓展。</p></div><Badge className="bg-emerald-700 text-white">{Math.round((choiceScore / weekChoice.length) * 100)}%</Badge></div>}
               <div className="grid gap-5">{weekChoice.map((question, index) => <ChoiceCard key={question.id} question={question} index={index} total={weekChoice.length} answer={choiceAnswers[question.id] ?? []} submitted={choiceSubmitted} onChange={(answer) => setChoiceAnswers((current) => ({ ...current, [question.id]: answer }))} />)}</div>
               <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm"><p className="flex items-center gap-2 text-sm text-slate-500">{weekChoiceAnswered < weekChoice.length && <CircleAlert aria-hidden="true" className="size-4 text-amber-500" />}已作答 {weekChoiceAnswered} / {weekChoice.length}；未答题也可交卷</p><Button size="lg" disabled={choiceSubmitted} onClick={() => setSubmittedChoiceWeeks((current) => [...new Set([...current, activeWeek])])}><CheckCircle2 aria-hidden="true" />{choiceSubmitted ? '已提交' : `提交 Week ${activeWeek} 选择题`}</Button></div>
             </TabsContent>
             <TabsContent value="short">
-              {shortSubmitted && <div className="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm leading-6 text-emerald-950"><p className="font-semibold">Week {activeWeek} 简答题已提交</p><p>已显示全部参考答案；简答题不进行自动评分。</p></div>}
+              {shortSubmitted && <div className="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm leading-6 text-emerald-950"><p className="font-semibold">Week {activeWeek} 简答题已提交</p><p>已显示参考答案、得分点、知识解析和拓展；简答题不进行自动评分。</p></div>}
               <div className="grid gap-5">{weekShort.map((question, index) => <ShortCard key={question.id} question={question} index={index} total={weekShort.length} answer={shortAnswers[question.id] ?? ''} submitted={shortSubmitted} onChange={(answer) => setShortAnswers((current) => ({ ...current, [question.id]: answer }))} />)}</div>
               <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm"><p className="flex items-center gap-2 text-sm text-slate-500">{weekShortAnswered < weekShort.length && <CircleAlert aria-hidden="true" className="size-4 text-amber-500" />}已作答 {weekShortAnswered} / {weekShort.length}；提交后显示参考答案</p><Button size="lg" disabled={shortSubmitted} onClick={() => setSubmittedShortWeeks((current) => [...new Set([...current, activeWeek])])}><CheckCircle2 aria-hidden="true" />{shortSubmitted ? '已提交' : `提交 Week ${activeWeek} 简答题`}</Button></div>
             </TabsContent>

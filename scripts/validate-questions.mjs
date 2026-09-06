@@ -9,7 +9,7 @@ const bundled = await build({
   write: false,
 });
 const moduleUrl = `data:text/javascript;base64,${Buffer.from(bundled.outputFiles[0].text).toString('base64')}`;
-const { choiceQuestions, shortQuestions, coverageAudit } = await import(moduleUrl);
+const { choiceQuestions, shortQuestions, coverageAudit, choiceAnalysis, findTopicGuidance, shortAnalysis } = await import(moduleUrl);
 
 const ids = [...choiceQuestions, ...shortQuestions].map((question) => question.id);
 assert.equal(new Set(ids).size, ids.length, 'Question IDs must be unique');
@@ -29,12 +29,16 @@ for (const question of choiceQuestions) {
   assert.ok(question.correct.every((index) => Number.isInteger(index) && index >= 0 && index < question.options.length), `${question.id} has an invalid answer index`);
   assert.equal(new Set(question.correct).size, question.correct.length, `${question.id} has duplicate answer indices`);
   assert.equal(question.kind === 'single' ? question.correct.length : Number(question.correct.length >= 2), 1, `${question.id} has an invalid correct-answer count`);
+  assert.ok(findTopicGuidance(question.topic), `${question.id} has no topic guidance`);
+  assert.ok(choiceAnalysis(question).length > 100, `${question.id} needs a substantive explanation`);
 }
 
 for (const question of shortQuestions) {
   assert.ok(question.prompt.trim(), `${question.id} must have a prompt`);
   assert.ok(question.answer.trim(), `${question.id} must have a reference answer`);
   assert.ok(question.topic.trim(), `${question.id} must have a topic`);
+  assert.ok(findTopicGuidance(question.topic), `${question.id} has no topic guidance`);
+  assert.ok(shortAnalysis(question).length > 100, `${question.id} needs substantive scoring guidance`);
 }
 
 const questionById = new Map([...choiceQuestions, ...shortQuestions].map((question) => [question.id, question]));

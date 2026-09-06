@@ -18,3 +18,4 @@ export const weekMeta: Record<WeekNumber, { title: string; topics: string }> = {
 
 export const weeks: WeekNumber[] = [1, 2, 3, 4];
 export { coverageAudit } from './coverage-audit';
+export { choiceAnalysis, findTopicGuidance, getTopicGuidance, shortAnalysis } from './question-guidance';

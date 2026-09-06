@@ -1,0 +1,165 @@
+import { multiple, short, single } from './quiz-types';
+
+export const week3Choice = [
+  single('W3-C01', 3, 'Schema and instance', 'Which statement correctly distinguishes a database schema from a database instance?', 2, [
+    'The schema is the current rows; the instance is the table definitions.',
+    'Both terms refer only to physical files.',
+    'The schema defines structure and constraints; the instance is the data stored at a particular time.',
+    'The schema changes whenever one row is inserted.',
+  ]),
+  single('W3-C02', 3, 'Relations', 'A relation has attributes StudentID, Name, Course and Mark, and currently contains 60 tuples. What are its degree and cardinality?', 0, [
+    'Degree 4; cardinality 60',
+    'Degree 60; cardinality 4',
+    'Degree 64; cardinality 1',
+    'Both are 60',
+  ]),
+  single('W3-C03', 3, 'Keys', 'What is a superkey?', 1, [
+    'Only the primary key selected by the designer',
+    'Any set of attributes that uniquely identifies each tuple',
+    'A foreign key containing several columns',
+    'An attribute that is unique in the current sample only',
+  ]),
+  single('W3-C04', 3, 'Keys', 'What distinguishes a candidate key from other superkeys?', 3, [
+    'It must contain a surrogate value.',
+    'It must be chosen as the primary key.',
+    'It must contain every attribute in the relation.',
+    'It is minimal: no proper subset is also a superkey.',
+  ]),
+  single('W3-C05', 3, 'Keys', 'A relation has two candidate keys, StudentID and UniversityEmail. If StudentID is chosen as the primary key, UniversityEmail is:', 2, [
+    'a foreign key',
+    'a partial key',
+    'an alternate key',
+    'not a key',
+  ]),
+  single('W3-C06', 3, 'Keys', 'A sample shows unique PersonName values. Why is PersonName not automatically a candidate key?', 0, [
+    'Uniqueness must be guaranteed by the business rules, not inferred only from one current instance.',
+    'Candidate keys must always be integers.',
+    'Names cannot be stored in relations.',
+    'A candidate key must contain at least two attributes.',
+  ]),
+  single('W3-C07', 3, 'Natural and surrogate keys', 'Which is a surrogate key?', 1, [
+    'A government-issued identifier with business meaning',
+    'A system-generated CustomerID with no business meaning',
+    'A combination of CourseCode and Semester',
+    'An email address supplied by a customer',
+  ]),
+  single('W3-C08', 3, 'Natural and surrogate keys', 'A surrogate ProductID is introduced, but ProductCode must still be unique by business rule. What should the design do?', 3, [
+    'Remove ProductCode completely.',
+    'Allow duplicate ProductCode values because ProductID is unique.',
+    'Make ProductCode a foreign key to ProductID.',
+    'Use ProductID as PK and enforce a uniqueness constraint on ProductCode.',
+  ]),
+  single('W3-C09', 3, 'Foreign keys', 'What is a foreign key?', 2, [
+    'An attribute that is never allowed to contain duplicate values',
+    'Any attribute imported from an external file',
+    'An attribute set whose values reference a candidate key in a related relation',
+    'The first attribute displayed in a table',
+  ]),
+  single('W3-C10', 3, 'Referential integrity', 'Order.CustomerID = 27, but no Customer has CustomerID 27. Which constraint is violated?', 1, [
+    'Attribute naming',
+    'Referential integrity',
+    'Relation degree',
+    'Physical data independence',
+  ]),
+  single('W3-C11', 3, 'Referential integrity', 'Which foreign-key value is generally legal when the relationship is optional and the column permits it?', 0, [
+    'NULL',
+    'Any value not found in the parent relation',
+    'A text description instead of the referenced identifier',
+    'A duplicate primary key in the child relation is always illegal',
+  ]),
+  single('W3-C12', 3, 'Constraints', 'What does a NOT NULL constraint on a foreign key enforce?', 3, [
+    'Maximum cardinality many on the parent side',
+    'Uniqueness of every child row',
+    'Automatic deletion of the child row',
+    'Mandatory participation of the child row in the referenced relationship',
+  ]),
+  single('W3-C13', 3, 'Referential actions', 'What is the typical effect of ON DELETE NO ACTION for a referenced parent row?', 1, [
+    'All child rows are deleted immediately.',
+    'The deletion is rejected while matching child references remain.',
+    'Every child foreign key becomes a new primary key.',
+    'The parent key is replaced with NULL.',
+  ]),
+  single('W3-C14', 3, 'Referential actions', 'What does ON DELETE CASCADE mean for a parent row?', 2, [
+    'The parent can never be deleted.',
+    'The parent key is copied into every unrelated table.',
+    'Referencing child rows are deleted automatically with the parent.',
+    'The child relation becomes independent of the parent.',
+  ]),
+  single('W3-C15', 3, 'Design levels', 'At which design level are relation names, attributes, primary keys and foreign keys normally specified without choosing MySQL storage details?', 0, [
+    'Logical design',
+    'Requirements discovery only',
+    'Physical file design only',
+    'Database instance design',
+  ]),
+  single('W3-C16', 3, 'N-ary relationships', 'A relationship connects Supplier, Part and Project. What is its degree?', 3, [
+    'Unary',
+    'Binary',
+    'Quaternary',
+    'Ternary',
+  ]),
+  single('W3-C17', 3, 'Ternary relationships', 'A Doctor treats a Patient at a Clinic, and the same triple may occur on several TreatmentDates. Which key best distinguishes treatment occurrences?', 1, [
+    'DoctorID alone',
+    '(DoctorID, PatientID, ClinicID, TreatmentDate)',
+    '(DoctorID, PatientID) only',
+    'TreatmentDate alone',
+  ]),
+  multiple('W3-C18', 3, 'Keys', 'For R(A, B, C), {A} and {B, C} are candidate keys. Which are superkeys? Select all that apply.', [0, 1, 2], [
+    '{A}',
+    '{A, C}',
+    '{B, C}',
+    '{B}',
+  ]),
+  multiple('W3-C19', 3, 'Mapping', 'When transforming a regular entity type into a relation, which elements are normally carried forward? Select all that apply.', [0, 1, 3], [
+    'The entity identifier becomes a candidate key.',
+    'Simple single-valued attributes become relation attributes.',
+    'Current sample rows determine all future cardinalities.',
+    'One candidate key is selected as the primary key.',
+  ]),
+  multiple('W3-C20', 3, 'Referential actions', 'Which are recognised ways to handle deletion or update of a referenced key? Select all that apply.', [0, 1, 2], [
+    'Reject the action when references exist.',
+    'Cascade the change to referencing rows.',
+    'Set the foreign key to NULL when NULL is permitted.',
+    'Silently invent a new unrelated parent row.',
+  ]),
+  multiple('W3-C21', 3, 'Constraint coverage', 'Which constraints may be needed in addition to a primary key? Select all that apply.', [0, 1, 3], [
+    'A UNIQUE constraint for an unchosen candidate key',
+    'A FOREIGN KEY constraint for a relationship reference',
+    'A rule that tuple order has business meaning',
+    'A NOT NULL constraint for mandatory participation',
+  ]),
+  multiple('W3-C22', 3, 'Associative relations', 'Enrolment(StudentID, SubjectID, EnrolDate) represents Student M:M Subject, with at most one enrolment per pair. Which statements are correct? Select all that apply.', [0, 2, 3], [
+    '(StudentID, SubjectID) can be the composite primary key.',
+    'EnrolDate alone must be the primary key.',
+    'StudentID and SubjectID are foreign keys.',
+    'EnrolDate is a non-key attribute of the relationship occurrence.',
+  ]),
+  multiple('W3-C23', 3, 'Multivalued attributes', 'Employee has a multivalued Skill attribute. Which statements describe a suitable relational mapping? Select all that apply.', [0, 1, 3], [
+    'Create EmployeeSkill(EmployeeID, Skill).',
+    'EmployeeID in EmployeeSkill references Employee.',
+    'Store all skills as a comma-separated value to preserve atomicity.',
+    '(EmployeeID, Skill) can identify each skill occurrence.',
+  ]),
+  multiple('W3-C24', 3, 'Design levels', 'Which choices are normally part of physical design? Select all that apply.', [0, 2, 3], [
+    'Selecting MySQL data types',
+    'Discovering whether Customer and Order are related',
+    'Choosing indexes',
+    'Specifying DBMS-specific referential actions',
+  ]),
+  multiple('W3-C25', 3, 'Mapping case', 'A toy library records Loan(MemberID, ToyID, LoanDate, ReturnDate). A member can borrow the same toy on different dates. Which statements are correct? Select all that apply.', [0, 1, 2], [
+    '(MemberID, ToyID, LoanDate) is a plausible composite key.',
+    'MemberID and ToyID are foreign keys.',
+    'ReturnDate may be NULL while the toy has not been returned.',
+    '(MemberID, ToyID) always identifies every historical loan.',
+  ]),
+];
+
+export const week3Short = [
+  short('W3-S01', 3, 'Schema and instance', 'Distinguish schema and instance using a Student relation.', 'Schema: the definition, for example Student(StudentID, Name, Email) and its constraints. Instance: the set of Student tuples stored at a particular time.'),
+  short('W3-S02', 3, 'Keys', 'For Employee(EmployeeID, TaxFileNumber, Email, Name), business rules guarantee that the first three attributes are each unique. If EmployeeID is the PK, classify the other two.', 'EmployeeID is the primary key. TaxFileNumber and Email are alternate candidate keys and should each have a uniqueness constraint.'),
+  short('W3-S03', 3, 'Surrogate keys', 'A Booking table uses generated BookingID, while (RoomID, StartDateTime) must also be unique. State the required key constraints.', 'BookingID is the primary key. (RoomID, StartDateTime) is an alternate candidate key enforced with UNIQUE; RoomID is also a foreign key to Room.'),
+  short('W3-S04', 3, 'Referential integrity', 'State the valid possibilities for a foreign-key value and how mandatory participation changes them.', 'A foreign key must match a referenced candidate-key value or be NULL if NULL is permitted. Mandatory participation requires NOT NULL, so a matching referenced value is required.'),
+  short('W3-S05', 3, 'Conceptual-to-physical mapping', 'Give the usual progression from a conceptual Customer 1:M Order model to a physical MySQL design.', 'Conceptual: Customer 1:M Order. Logical: Customer(CustomerID, …) and Order(OrderID, CustomerID, …), with CustomerID an FK. Physical: choose MySQL types, NOT NULL as required, FK action and indexes.'),
+  short('W3-S06', 3, 'Ternary relationships', 'Supplier supplies Part to Project, and Quantity belongs to each triple. Give a suitable relation schema.', 'Supply(SupplierID PK/FK, PartID PK/FK, ProjectID PK/FK, Quantity), with composite PK (SupplierID, PartID, ProjectID).'),
+  short('W3-S07', 3, 'Associative relations', 'AssignedEquipment(EmployeeID, EquipmentID, AssignedFrom, AssignedTo) keeps assignment history. State a plausible minimal primary key.', 'A plausible PK is (EmployeeID, EquipmentID, AssignedFrom). EmployeeID and EquipmentID are also foreign keys.'),
+  short('W3-S08', 3, 'Mapping case', 'A member may borrow the same toy repeatedly. Map Member–Toy borrowing so that history is preserved.', 'Member(MemberID, …), Toy(ToyID, …), Loan(MemberID PK/FK, ToyID PK/FK, LoanDate PK, ReturnDate). The Loan key is (MemberID, ToyID, LoanDate).'),
+];

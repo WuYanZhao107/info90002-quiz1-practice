@@ -1,0 +1,183 @@
+import { multiple, short, single } from './quiz-types';
+
+export const week2Choice = [
+  single('W2-C01', 2, 'Entity types', 'Which statement correctly distinguishes an entity type from an entity occurrence?', 1, [
+    'An entity type is one stored row; an occurrence is the table definition.',
+    'An entity type describes a class of things; an occurrence is one identifiable member of that class.',
+    'An entity type must be physical; an occurrence must be conceptual.',
+    'They are interchangeable terms in ER modelling.',
+  ]),
+  single('W2-C02', 2, 'Attributes and domains', 'In an ER model, what is the domain of an attribute?', 2, [
+    'The entity type that owns the attribute',
+    'The set of relationships connected to the entity',
+    'The permitted set or range of values for the attribute',
+    'The number of entity occurrences currently stored',
+  ]),
+  single('W2-C03', 2, 'Participation', 'A business rule says: “A member may make no bookings.” What is the minimum participation of Member in Makes?', 0, [
+    'Zero',
+    'One',
+    'Many',
+    'It cannot be modelled',
+  ]),
+  single('W2-C04', 2, 'Attributes', 'Which attribute is most naturally multivalued?', 3, [
+    'A person\'s date of birth',
+    'An order\'s unique order number',
+    'A product\'s current unit price',
+    'A customer\'s set of contact phone numbers',
+  ]),
+  single('W2-C05', 2, 'Attributes', 'Which is a composite attribute?', 1, [
+    'Age calculated from DateOfBirth',
+    'Address divided into Street, Suburb, State and Postcode',
+    'A set of employee skills',
+    'A single identifier with no meaningful parts',
+  ]),
+  single('W2-C06', 2, 'Attributes', 'Age is calculated from DateOfBirth. In conceptual modelling, Age is best described as:', 2, [
+    'a multivalued attribute',
+    'a composite identifier',
+    'a derived attribute',
+    'an identifying relationship',
+  ]),
+  single('W2-C07', 2, 'Identifiers', 'What is the purpose of an identifier in a conceptual data model?', 0, [
+    'To distinguish each occurrence of an entity type',
+    'To record the maximum cardinality of a relationship',
+    'To store every descriptive attribute together',
+    'To replace all relationship names with numbers',
+  ]),
+  single('W2-C08', 2, 'Relationships', 'Which phrase most clearly describes a relationship type?', 3, [
+    'Customer has CustomerName',
+    'Price has the domain DECIMAL',
+    'Order has the identifier OrderID',
+    'Customer places Order',
+  ]),
+  single('W2-C09', 2, 'Cardinality', 'What does the connectivity of a binary relationship describe?', 1, [
+    'Whether an attribute is optional',
+    'Whether the relationship is 1:1, 1:M or M:M',
+    'The data type selected for each foreign key',
+    'The number of rows already stored',
+  ]),
+  single('W2-C10', 2, 'Cardinality', 'Each clinic employs one or more doctors. Each doctor works for exactly one clinic. What is the connectivity?', 2, [
+    '1:1',
+    'M:M',
+    'Clinic 1:M Doctor',
+    'Doctor 1:M Clinic',
+  ]),
+  single('W2-C11', 2, 'Participation', 'In “Each parcel must be assigned to exactly one route”, what is Parcel\'s participation in AssignedTo?', 3, [
+    'Optional and many',
+    'Optional and one',
+    'Mandatory and many',
+    'Mandatory and one',
+  ]),
+  single('W2-C12', 2, 'Binary relationships', 'For a 1:M relationship Department employs Employee, where each employee belongs to one department, where is DepartmentID normally placed in the relational design?', 1, [
+    'Only in Department as a non-key attribute',
+    'In Employee as a foreign key',
+    'In a new associative relation in every case',
+    'In neither relation',
+  ]),
+  single('W2-C13', 2, 'Weak entities', 'Which condition is essential for an entity type to be weak?', 2, [
+    'It has no attributes at all.',
+    'It participates in an M:M relationship.',
+    'Its identifier depends on the identifier of an owner entity.',
+    'Every attribute is optional.',
+  ]),
+  single('W2-C14', 2, 'Weak entities', 'Room is identified by RoomNumber only within a Building. Which conceptual identifier is required for Room?', 0, [
+    'BuildingID plus RoomNumber',
+    'RoomNumber alone for the entire organisation',
+    'BuildingName alone',
+    'A relationship name only',
+  ]),
+  single('W2-C15', 2, 'Weak entities', 'In the relational mapping of Building(BuildingID) and weak Room(RoomNumber), which attribute in Room is normally both PK and FK?', 3, [
+    'RoomNumber only',
+    'RoomDescription',
+    'BuildingName',
+    'BuildingID',
+  ]),
+  single('W2-C16', 2, 'M:M resolution', 'Student enrols in Subject, and Grade belongs to each enrolment. Where should Grade be stored after resolving the M:M relationship?', 1, [
+    'In Student',
+    'In the associative entity Enrolment',
+    'In Subject',
+    'As a derived attribute of both entities',
+  ]),
+  single('W2-C17', 2, 'M:M resolution', 'Which transformation correctly resolves Author M:M Book?', 2, [
+    'Place AuthorID in Book and allow only one author.',
+    'Place BookID in Author and allow only one book.',
+    'Create Authorship with AuthorID and BookID as foreign keys.',
+    'Merge Author and Book into one entity type.',
+  ]),
+  single('W2-C18', 2, 'Business rules', 'A sample database currently shows one technician per device. The stated rule allows many technicians per device. What should the conceptual model represent?', 0, [
+    'The stated business rule, not the accidental sample pattern',
+    'Only the values visible in the sample',
+    'A 1:1 relationship because the current instance proves it',
+    'No relationship until at least two technicians exist',
+  ]),
+  single('W2-C19', 2, 'Conceptual modelling', 'What is the primary purpose of an ER diagram?', 3, [
+    'To specify disk blocks and indexes',
+    'To list the current rows in every table',
+    'To execute queries against a database server',
+    'To represent business data requirements independently of a particular DBMS',
+  ]),
+  multiple('W2-C20', 2, 'Entity discovery', 'Which are reasonable candidate entity types in a library requirements description? Select all that apply.', [0, 1, 3], [
+    'Member',
+    'BookCopy',
+    'Overdue as a standalone thing with no identity or attributes',
+    'Loan',
+  ]),
+  multiple('W2-C21', 2, 'Attribute types', 'Which statements correctly classify attributes? Select all that apply.', [0, 2, 3], [
+    'FullName may be composite if it is divided into given and family names.',
+    'DateOfBirth is necessarily multivalued.',
+    'Age derived from DateOfBirth can change without updating DateOfBirth.',
+    'Several EmailAddress values for one person form a multivalued attribute.',
+  ]),
+  multiple('W2-C22', 2, 'Cardinality', 'The rule is: “A team has one or more players; a player belongs to exactly one team.” Which statements are correct? Select all that apply.', [0, 1, 3], [
+    'The relationship is 1:M from Team to Player.',
+    'Player participation is mandatory.',
+    'A player may belong to many teams in this model.',
+    'Team participation is mandatory.',
+  ]),
+  multiple('W2-C23', 2, 'Weak entities', 'Which conditions support modelling Dependent as a weak entity owned by Employee? Select all that apply.', [0, 1, 3], [
+    'DependentName is unique only within one employee.',
+    'A dependent cannot exist in the system without an owning employee.',
+    'Dependent has an independent organisation-wide identifier.',
+    'EmployeeID contributes to Dependent\'s identifier.',
+  ]),
+  multiple('W2-C24', 2, 'M:M resolution', 'What results from resolving Course M:M Textbook using CourseTextbook? Select all that apply.', [0, 2, 3], [
+    'CourseTextbook contains CourseID as an FK.',
+    'The original design becomes a direct 1:1 relationship.',
+    'CourseTextbook contains TextbookID as an FK.',
+    'An attribute such as RequiredStatus can belong to CourseTextbook.',
+  ]),
+  multiple('W2-C25', 2, 'Business rules', 'Which modelling decisions cannot be justified from a small sample of rows alone? Select all that apply.', [0, 1, 2], [
+    'Declaring an attribute to be a candidate identifier because its shown values happen to be unique',
+    'Declaring participation mandatory because every shown row currently participates',
+    'Declaring maximum cardinality one because no repeated value appears in the sample',
+    'Counting the current number of rows in the sample',
+  ]),
+  multiple('W2-C26', 2, 'Mapping audit', 'A designer maps Customer 1:M Order. Each order must belong to a customer. Which elements should appear in the logical design? Select all that apply.', [0, 2, 3], [
+    'Customer has its own primary key.',
+    'CustomerID is the primary key of every Order.',
+    'Order contains CustomerID as a non-null foreign key.',
+    'The foreign key references Customer\'s primary key.',
+  ]),
+  multiple('W2-C27', 2, 'Domains', 'Which are examples of domain constraints? Select all that apply.', [0, 1, 3], [
+    'Rating must be an integer from 1 to 5.',
+    'Status must be one of Pending, Paid or Cancelled.',
+    'Every invoice must contain at least one line item.',
+    'EmailAddress must follow the permitted representation and length.',
+  ]),
+  multiple('W2-C28', 2, 'Design audit', 'Which are signs that an ER model should be revised? Select all that apply.', [0, 1, 2], [
+    'A repeating group of phone numbers is stored in one single-valued attribute.',
+    'An M:M relationship has an attribute but no associative entity in the logical mapping.',
+    'A weak entity is shown with no owner relationship.',
+    'Every entity type has a meaningful name.',
+  ]),
+];
+
+export const week2Short = [
+  short('W2-S01', 2, 'Cardinality', 'A customer may place zero or many orders. Every order must be placed by exactly one customer. State the minimum and maximum cardinalities on both sides.', 'Customer participates in 0..many Orders. Each Order participates with exactly 1 Customer.'),
+  short('W2-S02', 2, 'Weak entities', 'Building has identifier BuildingID. RoomNumber is unique only inside one building, and a room cannot exist without its building. Identify the weak entity and its identifier.', 'Room is the weak entity. Its identifier is (BuildingID, RoomNumber); BuildingID is inherited from the owner through the identifying relationship.'),
+  short('W2-S03', 2, 'M:M resolution', 'An order contains many products and a product appears in many orders. Quantity is recorded for each pairing. Give the resolved conceptual structure.', 'Order 1:M OrderLine and Product 1:M OrderLine. OrderLine is the associative entity, identified by (OrderID, ProductID), and stores Quantity.'),
+  short('W2-S04', 2, 'Weak entities', 'A theatre number is unique only within a cinema. Write a suitable identifier for Theatre and name the owner entity.', 'Theatre identifier: (CinemaID, TheatreNumber). Owner entity: Cinema.'),
+  short('W2-S05', 2, 'Domains', 'Distinguish an attribute domain from a physical DBMS data type.', 'A domain is the permitted semantic set or range of values for an attribute. A physical data type is the DBMS-specific representation chosen to store those values.'),
+  short('W2-S06', 2, 'Entity discovery', 'For a community library that lends physical copies of books to members, name four likely entity types.', 'Member, Book, BookCopy and Loan.'),
+  short('W2-S07', 2, 'Strong and weak entities', 'Explain briefly why Order is not automatically a weak entity merely because it belongs to a Customer.', 'If Order has its own independent identifier, such as OrderID, its identity does not depend on CustomerID. Mandatory existence dependency alone does not make it weak.'),
+  short('W2-S08', 2, 'Design audit', 'A model stores Skill1, Skill2 and Skill3 in Employee. State the main problem and give a better conceptual design.', 'The fixed repeating attributes impose an arbitrary limit. Model Skill as an entity and Employee–Skill as an M:M relationship, resolved by an associative entity when mapped.'),
+];

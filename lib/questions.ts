@@ -2,10 +2,11 @@ import { week1Choice, week1Short } from './week1-questions';
 import { week2Choice, week2Short } from './week2-questions';
 import { week3Choice, week3Short } from './week3-questions';
 import { week4Choice, week4Short } from './week4-questions';
+import { coverageChoice, coverageShort } from './coverage-extension';
 import type { WeekNumber } from './quiz-types';
 
-export const choiceQuestions = [...week1Choice, ...week2Choice, ...week3Choice, ...week4Choice];
-export const shortQuestions = [...week1Short, ...week2Short, ...week3Short, ...week4Short];
+export const choiceQuestions = [...week1Choice, ...week2Choice, ...week3Choice, ...week4Choice, ...coverageChoice];
+export const shortQuestions = [...week1Short, ...week2Short, ...week3Short, ...week4Short, ...coverageShort];
 export const LETTERS = ['A', 'B', 'C', 'D'] as const;
 
 export const weekMeta: Record<WeekNumber, { title: string; topics: string }> = {
@@ -16,3 +17,4 @@ export const weekMeta: Record<WeekNumber, { title: string; topics: string }> = {
 };
 
 export const weeks: WeekNumber[] = [1, 2, 3, 4];
+export { coverageAudit } from './coverage-audit';

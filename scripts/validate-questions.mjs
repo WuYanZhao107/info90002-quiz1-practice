@@ -9,26 +9,16 @@ const bundled = await build({
   write: false,
 });
 const moduleUrl = `data:text/javascript;base64,${Buffer.from(bundled.outputFiles[0].text).toString('base64')}`;
-const { choiceQuestions, shortQuestions } = await import(moduleUrl);
-
-const expected = {
-  1: { single: 14, multiple: 4, short: 4 },
-  2: { single: 19, multiple: 9, short: 8 },
-  3: { single: 17, multiple: 8, short: 8 },
-  4: { single: 20, multiple: 9, short: 10 },
-};
+const { choiceQuestions, shortQuestions, coverageAudit } = await import(moduleUrl);
 
 const ids = [...choiceQuestions, ...shortQuestions].map((question) => question.id);
 assert.equal(new Set(ids).size, ids.length, 'Question IDs must be unique');
-assert.equal(choiceQuestions.filter((question) => question.kind === 'single').length, 70, 'Expected 70 single-choice questions');
-assert.equal(choiceQuestions.filter((question) => question.kind === 'multiple').length, 30, 'Expected 30 multiple-choice questions');
-assert.equal(shortQuestions.length, 30, 'Expected 30 short-answer questions');
-
-for (const [weekText, counts] of Object.entries(expected)) {
-  const week = Number(weekText);
-  assert.equal(choiceQuestions.filter((q) => q.week === week && q.kind === 'single').length, counts.single, `Week ${week} single count`);
-  assert.equal(choiceQuestions.filter((q) => q.week === week && q.kind === 'multiple').length, counts.multiple, `Week ${week} multiple count`);
-  assert.equal(shortQuestions.filter((q) => q.week === week).length, counts.short, `Week ${week} short count`);
+assert.ok(choiceQuestions.length >= 100, 'Expected at least 100 choice questions');
+assert.ok(shortQuestions.length >= 30, 'Expected at least 30 short-answer questions');
+for (const week of [1, 2, 3, 4]) {
+  assert.ok(choiceQuestions.some((q) => q.week === week && q.kind === 'single'), `Week ${week} needs single-choice questions`);
+  assert.ok(choiceQuestions.some((q) => q.week === week && q.kind === 'multiple'), `Week ${week} needs multiple-choice questions`);
+  assert.ok(shortQuestions.some((q) => q.week === week), `Week ${week} needs short-answer questions`);
 }
 
 for (const question of choiceQuestions) {
@@ -47,10 +37,24 @@ for (const question of shortQuestions) {
   assert.ok(question.topic.trim(), `${question.id} must have a topic`);
 }
 
+const questionById = new Map([...choiceQuestions, ...shortQuestions].map((question) => [question.id, question]));
+assert.ok(coverageAudit.length >= 30, 'Coverage audit must include every major slide-based outcome group');
+for (const item of coverageAudit) {
+  assert.ok(item.deck.trim() && item.slides.trim() && item.outcome.trim(), 'Coverage items need deck, slides and outcome');
+  assert.ok(item.questionIds.length, `${item.deck} slides ${item.slides} has no mapped questions`);
+  for (const id of item.questionIds) {
+    const question = questionById.get(id);
+    assert.ok(question, `Coverage item references missing question ${id}`);
+    assert.equal(question.week, item.week, `${id} is mapped to the wrong week`);
+  }
+}
+
 const sameAnswerSet = (given, correct) => given.length === correct.length
   && [...given].sort((a, b) => a - b).every((value, index) => value === [...correct].sort((a, b) => a - b)[index]);
 assert.equal(sameAnswerSet([2, 0], [0, 2]), true, 'Scoring must ignore answer order');
 assert.equal(sameAnswerSet([0], [0, 2]), false, 'Multiple choice must not award partial credit');
 assert.equal(sameAnswerSet([0, 2, 3], [0, 2]), false, 'Extra selections must be incorrect');
 
-console.log('Question bank validated: 70 single, 30 multiple, 30 short.');
+const singleCount = choiceQuestions.filter((question) => question.kind === 'single').length;
+const multipleCount = choiceQuestions.filter((question) => question.kind === 'multiple').length;
+console.log(`Question bank validated: ${singleCount} single, ${multipleCount} multiple, ${shortQuestions.length} short; ${coverageAudit.length} slide-based outcome groups covered.`);

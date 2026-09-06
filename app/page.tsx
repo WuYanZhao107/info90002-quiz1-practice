@@ -11,7 +11,7 @@ import { Progress, ProgressLabel, ProgressValue } from '@/components/ui/progress
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
-import { choiceQuestions, LETTERS, shortQuestions, weekMeta, weeks } from '@/lib/questions';
+import { choiceQuestions, coverageAudit, LETTERS, shortQuestions, weekMeta, weeks } from '@/lib/questions';
 import { answeredChoice, answeredShort, sameAnswerSet } from '@/lib/quiz-utils';
 import type { ChoiceQuestion, ShortQuestion, WeekNumber } from '@/lib/quiz-types';
 
@@ -20,6 +20,7 @@ type ShortAnswerState = Record<string, string>;
 type Section = 'choice' | 'short';
 type StoredState = { choiceAnswers: AnswerState; shortAnswers: ShortAnswerState; submittedChoiceWeeks: WeekNumber[]; submittedShortWeeks: WeekNumber[]; activeWeek: WeekNumber; activeSection: Section };
 const STORAGE_KEY = 'info90002-quiz1-practice-v1';
+const TOTAL_QUESTIONS = choiceQuestions.length + shortQuestions.length;
 const isWeek = (value: unknown): value is WeekNumber => value === 1 || value === 2 || value === 3 || value === 4;
 const getChoiceForWeek = (week: WeekNumber) => choiceQuestions.filter((q) => q.week === week);
 const getShortForWeek = (week: WeekNumber) => shortQuestions.filter((q) => q.week === week);
@@ -179,7 +180,7 @@ export default function Home() {
   const weekShort = useMemo(() => getShortForWeek(activeWeek), [activeWeek]);
   const choiceSubmitted = submittedChoiceWeeks.includes(activeWeek); const shortSubmitted = submittedShortWeeks.includes(activeWeek);
   const overallAnswered = choiceQuestions.filter((q) => answeredChoice(choiceAnswers[q.id])).length + shortQuestions.filter((q) => answeredShort(shortAnswers[q.id])).length;
-  const overallPercent = Math.round((overallAnswered / 130) * 100);
+  const overallPercent = Math.round((overallAnswered / TOTAL_QUESTIONS) * 100);
   const weekChoiceAnswered = weekChoice.filter((q) => answeredChoice(choiceAnswers[q.id])).length;
   const weekShortAnswered = weekShort.filter((q) => answeredShort(shortAnswers[q.id])).length;
   const choiceScore = weekChoice.filter((q) => sameAnswerSet(choiceAnswers[q.id], q.correct)).length;
@@ -193,12 +194,12 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <header className="border-b border-white/10 bg-primary text-primary-foreground"><div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-5 py-5 sm:px-8"><div className="flex items-center gap-3"><span className="grid size-11 place-items-center rounded-xl bg-white/10"><Database aria-hidden="true" className="size-6" /></span><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">INFO90002 · Quiz 1</p><h1 className="text-xl font-semibold tracking-tight sm:text-2xl">Week 1–4 交互式模拟题库</h1></div></div><Badge className="hidden border-white/15 bg-white/10 px-3 py-1.5 text-white sm:inline-flex">100 choice · 30 short</Badge></div></header>
+      <header className="border-b border-white/10 bg-primary text-primary-foreground"><div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-5 py-5 sm:px-8"><div className="flex items-center gap-3"><span className="grid size-11 place-items-center rounded-xl bg-white/10"><Database aria-hidden="true" className="size-6" /></span><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">INFO90002 · Quiz 1</p><h1 className="text-xl font-semibold tracking-tight sm:text-2xl">Week 1–4 交互式模拟题库</h1></div></div><Badge className="hidden border-white/15 bg-white/10 px-3 py-1.5 text-white sm:inline-flex">{choiceQuestions.length} choice · {shortQuestions.length} short</Badge></div></header>
       <div className="mx-auto grid max-w-7xl gap-6 px-5 py-7 sm:px-8 lg:grid-cols-[250px_minmax(0,1fr)]">
         <aside className="space-y-4 lg:sticky lg:top-6 lg:self-start">
-          <Card className="border-0 shadow-sm ring-1 ring-slate-200"><CardHeader><CardDescription>总体进度</CardDescription><CardTitle className="text-2xl">{overallAnswered} / 130</CardTitle></CardHeader><CardContent><Progress value={overallPercent}><ProgressLabel>已作答</ProgressLabel><ProgressValue>{() => `${overallPercent}%`}</ProgressValue></Progress><p className="mt-4 flex items-center gap-2 text-xs leading-5 text-slate-500"><Save aria-hidden="true" className="size-3.5" />进度自动保存在当前设备</p></CardContent></Card>
+          <Card className="border-0 shadow-sm ring-1 ring-slate-200"><CardHeader><CardDescription>总体进度</CardDescription><CardTitle className="text-2xl">{overallAnswered} / {TOTAL_QUESTIONS}</CardTitle></CardHeader><CardContent><Progress value={overallPercent}><ProgressLabel>已作答</ProgressLabel><ProgressValue>{() => `${overallPercent}%`}</ProgressValue></Progress><p className="mt-4 flex items-center gap-2 text-xs leading-5 text-slate-500"><Save aria-hidden="true" className="size-3.5" />进度自动保存在当前设备</p></CardContent></Card>
           <nav aria-label="Week navigation" className="grid grid-cols-2 rounded-xl border border-slate-200 bg-white p-2 shadow-sm lg:grid-cols-1">{weeks.map((week) => <button key={week} className={`flex w-full items-center justify-between rounded-lg px-3 py-3 text-left text-sm font-medium transition-colors ${week === activeWeek ? 'bg-sky-50 text-sky-950' : 'text-slate-600 hover:bg-slate-50'}`} type="button" aria-current={week === activeWeek ? 'page' : undefined} onClick={() => setActiveWeek(week)}>Week {week}<span className="text-xs tabular-nums text-slate-400">{weekProgress(week)}%</span></button>)}</nav>
-          <Card className="hidden border-0 bg-slate-900 text-slate-100 shadow-sm lg:block"><CardContent className="p-4 text-sm leading-6"><p className="font-semibold">Quiz information</p><p className="mt-2 text-slate-300">Week 1–4 · 11 questions · 70 minutes · MCQ + short answer</p></CardContent></Card>
+          <Card className="hidden border-0 bg-slate-900 text-slate-100 shadow-sm lg:block"><CardContent className="p-4 text-sm leading-6"><p className="font-semibold">Quiz information</p><p className="mt-2 text-slate-300">Week 1–4 · 11 questions · 70 minutes · MCQ + short answer</p><p className="mt-3 border-t border-slate-700 pt-3 text-xs text-slate-400">题库覆盖 {coverageAudit.length} 个课件考点组</p></CardContent></Card>
         </aside>
         <section className="min-w-0">
           <div className="mb-6 flex flex-wrap items-start justify-between gap-4"><div><div className="mb-2 flex items-center gap-2 text-sm font-medium text-sky-800"><BookOpenCheck aria-hidden="true" className="size-4" />Week {activeWeek} · {weekMeta[activeWeek].title}</div><h2 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">{weekMeta[activeWeek].topics}</h2><p className="mt-2 max-w-3xl text-base leading-7 text-slate-600">答案在提交对应部分后显示。Multiple choice 必须选中完整正确集合才得分，不设部分分。</p></div>

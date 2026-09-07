@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "vinext dev",
     "build": "vinext build",
+    "build:github": "GITHUB_PAGES=true vinext build",
     "start": "wrangler dev --config dist/server/wrangler.json",
     "validate:questions": "node scripts/validate-questions.mjs",
     "lint": "oxlint",

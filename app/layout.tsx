@@ -18,6 +18,8 @@ export const metadata: Metadata = {
     'Week 1–4 interactive practice bank for INFO90002 Database Systems and Data Modelling.',
 };
 
+export const dynamic = 'force-static';
+
 export default function RootLayout({
   children,
 }: Readonly<{
